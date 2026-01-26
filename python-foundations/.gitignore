@@ -1,0 +1,6 @@
+# Ignore the database file
+data.json
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
