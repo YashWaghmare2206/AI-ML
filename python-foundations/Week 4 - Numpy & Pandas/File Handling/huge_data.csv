@@ -1,0 +1,9 @@
+transaction_id,user_id,product_id,category,price,quantity,total_amount,payment_method,transaction_date,country
+10000001,50123,P1023,Electronics,49999.99,1,49999.99,CreditCard,2024-11-01,India
+10000002,50124,P2045,Grocery,249.50,4,998.00,UPI,2024-11-01,India
+10000003,50125,P3341,Fashion,1999.00,2,3998.00,DebitCard,2024-11-01,India
+10000004,50126,P8891,Electronics,79999.00,1,79999.00,NetBanking,2024-11-01,India
+10000005,50127,P5543,Books,499.00,3,1497.00,Cash,2024-11-01,India
+99999998,88921,P7712,Electronics,15999.00,1,15999.00,UPI,2025-01-30,USA
+99999999,88922,P8821,Grocery,89.00,10,890.00,CreditCard,2025-01-30,USA
+100000000,88923,P9981,Fashion,2999.00,1,2999.00,DebitCard,2025-01-30,USA

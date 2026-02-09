@@ -1,0 +1,9 @@
+Employee_ID,First_Name,Last_Name,Age,Gender,Department,Role,Salary,Bonus,Experience_Years,Employment_Type,Joining_Date,City,State,Country,Email,Phone_Number,Performance_Rating,Manager_ID,Status
+E001,Rahul,Sharma,28,Male,IT,Software Engineer,75000,5000,4,Full-Time,2021-06-15,Pune,Maharashtra,India,rahul.sharma@company.com,9876543210,4,M101,Active
+E002,Anita,Verma,32,Female,HR,HR Manager,68000,7000,7,Full-Time,2018-03-10,Mumbai,Maharashtra,India,anita.verma@company.com,9123456780,5,M102,Active
+E003,Amit,Patel,26,Male,Finance,Analyst,52000,3000,2,Full-Time,2022-08-01,Ahmedabad,Gujarat,India,amit.patel@company.com,9988776655,3,M103,Active
+E004,Priya,Iyer,35,Female,Marketing,Marketing Lead,82000,10000,10,Full-Time,2015-01-20,Chennai,Tamil Nadu,India,priya.iyer@company.com,9090909090,5,M104,Active
+E005,Karan,Mehta,29,Male,IT,Data Analyst,60000,4000,5,Contract,2020-11-12,Bangalore,Karnataka,India,karan.mehta@company.com,9191919191,4,M101,Active
+E006,Sneha,Kulkarni,31,Female,Operations,Operations Manager,70000,6000,8,Full-Time,2017-07-05,Nagpur,Maharashtra,India,sneha.kulkarni@company.com,9887766554,4,M105,Active
+E007,Arjun,Singh,24,Male,IT,Intern,25000,0,1,Internship,2024-01-10,Delhi,Delhi,India,arjun.singh@company.com,9001122334,3,M101,Active
+E008,Neha,Gupta,27,Female,Finance,Accountant,48000,2000,3,Full-Time,2021-09-18,Jaipur,Rajasthan,India,neha.gupta@company.com,9345678123,4,M103,Active
