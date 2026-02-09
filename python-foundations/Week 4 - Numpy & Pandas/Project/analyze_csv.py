@@ -14,11 +14,15 @@ def grade_cal(x):
 
 
 # Load CSV data
-data = pd.read_csv(
-    "students.csv",
-    sep=",",
-    dtype={"Score": "int"}
+try:
+    data = pd.read_csv(
+        "students.csv",
+        sep=",",
+        dtype={"Score": "int"}
 )
+except FileNotFoundError:
+    print("❌ students.csv not found!")
+
 
 print(f"Loaded: {data.shape[0]} students")
 
