@@ -46,12 +46,12 @@ import pandas as pd
 # Medium 1: The Semicolon File
 # You have a file named users.csv. The data looks like this: ID;Username;Level 101;DevGuy;5 102;DataQueen;8
 # Task: Write the code to load this file correctly into a DataFrame named df_users.
-df = pd.read_csv("users.csv" , sep=";")
+df = pd.read_csv("users.csv", sep=";")
 
 # Medium 2: The Headerless File
 # You have a file named prices.txt. It has no header row: Apple, 0.50 Banana, 0.20
 # Task: Load this file, tell Pandas there is no header, and name the columns Product and Price.
-df2 = pd.read_csv("price.txt" , sep=',' , header=None , names=['Product' , 'Price'])
+df2 = pd.read_csv("price.txt", sep=',', header=None, names=['Product' , 'Price'])
 print(df2)
 
 # Hard 1: The Remote Tab-Separated File
@@ -154,7 +154,7 @@ print(df8)
 #     parse_dates=["Joining_Date"]
 # )
 
-df9 = pd.read_csv("shipment_tracker.csv" ,
+df9 = pd.read_csv("shipment_tracker.csv",
                   sep= ",",
                   index_col="Serial_Number",
                   parse_dates=["Shipment_Date"],
@@ -190,4 +190,4 @@ df10 = pd.read_csv("results.csv",
 print(df10)
 
 df10 = df10[df10["Score"] >= 80]
-df10.to_csv( path_or_buf="results_output.csv" , index=False ,encoding="utf-8" , columns=["Join_Date" , "Score" , "Status"])
+df10.to_csv(path_or_buf="results_output.csv", index=False, encoding="utf-8", columns=["Join_Date" , "Score" , "Status"])
