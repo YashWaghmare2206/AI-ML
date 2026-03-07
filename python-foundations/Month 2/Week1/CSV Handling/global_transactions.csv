@@ -1,0 +1,6 @@
+Transaction_ID,User_ID,Transaction_Date,Amount,Currency,Country,Payment_Method,Status,Tax,Discount,Shipping,Vendor,Category,Channel,Exchange_Rate,Notes
+00012345,U1001,2026-01-05,2499.50,USD,USA,Credit Card,Completed,125.00,0.00,15.00,Amazon,Electronics,Online,1.00,NA
+00012346,U1002,2026-01-05,799.99,EUR,Germany,PayPal,Completed,152.00,20.00,10.00,MediaMarkt,Appliances,Online,1.09,Promo applied
+00012347,U1003,2026-01-06,150000,INR,India,UPI,Completed,0.00,0.00,0.00,Flipkart,Mobile,Online,0.012,NA
+00012348,U1004,2026-01-06,320.75,GBP,UK,Debit Card,Refunded,64.15,0.00,5.00,Tesco,Grocery,In-Store,1.27,Returned item
+00012349,U1005,2026-01-07,999.00,USD,USA,Net Banking,Pending,49.95,50.00,0.00,Apple,Electronics,Online,1.00,Awaiting payment

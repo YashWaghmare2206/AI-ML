@@ -1,0 +1,12 @@
+{
+    "active": true,
+    "experience": 3,
+    "id": 501,
+    "name": "Rohit",
+    "salary": 85000,
+    "skills": [
+        "Python",
+        "SQL",
+        "Docker"
+    ]
+}

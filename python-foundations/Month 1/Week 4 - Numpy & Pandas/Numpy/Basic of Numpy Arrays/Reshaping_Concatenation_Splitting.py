@@ -64,3 +64,17 @@ left_block, right_column = np.hsplit(x2, [2])
 print("Split x1 into 3 parts:", part1, part2, part3)
 print("vsplit x2 (Upper Row):\n", upper_row)
 print("hsplit x2 (Left 2 Columns):\n", left_block)
+
+# 3️⃣ Concatenation ALWAYS Creates a Copy
+# This is very important:
+# Unlike slicing and reshaping, concatenation always allocates new memory.
+
+# Why?
+# Data from different arrays must be placed contiguously
+# No single shared buffer possible
+
+# So concatenation is:
+# O(n)
+# memory-expensive
+# ML implication:
+# Avoid concatenating inside training loops

@@ -20,14 +20,17 @@ print(a2)
 
 # " + " here no concatation but individual element addition and the size of array should be same
 a3 = a1 + a2 # Here promotion happens flaot32 and int64 has int64 has higher precision and the rule says float over int
-             #  but here in this case the float32 is smaller than int65 so float32 to float64 and int64 same then result is float64
+             #  but here in this case the float32 is smaller than int64 so float32 to float64 and int64 same then result is float64
 print(a3)
 
 print((a1.dtype))
 print((a2.dtype))
 print((a3.dtype))
 
+# bool (lowest) → int → float → complex (highest)
 
+# NumPy promotes to the “higher kind” + higher precision
+# int32 + float32 → float64
 
 #Nested lists in multidimensional array
 b1 = np.array([range(i , i + 2)  for i in [2,4,6]] , dtype=np.float32) # inner list are treated as rows
@@ -52,7 +55,7 @@ print(e1)
 f1 = np.arange( 0 , 51 , 5)
 print(f1)
 
-# Creating an array of "fixed size " evenly spaced between 0 and 1
+# Creating an array of " fixed size " evenly spaced between 0 and 1
                                                                 # start = 0 and stop = 1
 g1 = np.linspace(0 , 1 , 5)                  # step = (stop - start) / (num - 1) here ans is 0.25
                                                             # HERE then it will be 0 , 0.25 , 0.5..1
@@ -71,6 +74,7 @@ print(h2)                                           # " equal chance of every nu
 
 
 # Normal Distribution | Gaussian Distribution | Bell Curve
+
 # 1. The Three Main Arguments
 # loc (Mean): This is the "center" or the peak of the bell curve. Most numbers will be close to this value.
 #
@@ -81,6 +85,15 @@ print(h2)                                           # " equal chance of every nu
 l1 = np.random.normal( 1 , 2 , (3, 3))  # Here the values are more near the " loc "(mean) = 1 ..but interval is infinities..less but possible to get values even at extreme
 print(l1)                                               # HERE the size is optional
 
+# How spread is “scale = 2”?
+#
+# In a normal distribution:
+# ~68% values lie in [loc − scale, loc + scale]
+# → [−1, 3]
+#
+# ~95% values lie in [loc − 2·scale, loc + 2·scale]
+# → [−3, 5]
+# Extreme value
 
 
 # Random int values

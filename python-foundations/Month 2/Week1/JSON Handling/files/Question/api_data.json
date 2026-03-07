@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "name": "Asha",
+        "marks": { "math": 78, "science": 85 }
+      },
+      {
+        "id": 2,
+        "name": "Vikram",
+        "marks": { "math": 92, "science": 88 }
+      }
+    ]
+  }
+}

@@ -183,7 +183,6 @@ print(df9)
 # Ensure it is saved with utf-8 encoding to prevent character errors.
 
 df10 = pd.read_csv("results.csv",
-
                    sep = ",",
                    )
 

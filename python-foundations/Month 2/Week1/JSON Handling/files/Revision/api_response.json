@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "data": {
+    "users": [
+      { "id": 1, "score": 82 },
+      { "id": 2, "score": 91 }
+    ]
+  }
+}

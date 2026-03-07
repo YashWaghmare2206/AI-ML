@@ -1,0 +1,15 @@
+# Device Serial: SN-AX92-77B
+# Installed Location: Boiler Room 3
+# Technician: R. Sharma
+# Calibration Date: 2026-01-15
+# Notes: Intermittent temperature sensor glitches observed
+
+timestamp;sensor_id;temperature;humidity;status
+2026-02-01 10:00:00;SEN_01;36.5;45.2;OK
+2026-02-01 10:05:00;SEN_01;36.7;44.9;OK
+2026-02-01 10:10:00;SEN_01;ERROR_99;45.0;WARN
+2026-02-01 10:15:00;SEN_01;36.6;44.8;OK
+2026-02-01 10:20:00;SEN_01;OFFLINE;--;ERROR
+2026-02-01 10:25:00;SEN_01;36.8;44.6;OK
+2026-02-01 10:30:00;SEN_01;37.0;44.4;OK
+2026-02-01 10:35:00;SEN_01;ERROR_99;44.5;WARN
