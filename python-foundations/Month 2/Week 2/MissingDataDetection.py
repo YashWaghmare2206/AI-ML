@@ -67,7 +67,6 @@ print(df)
 # 6️⃣ What Pandas Treats as Missing
 #
 # Pandas considers these as missing:
-#
 # NaN
 # None
 # NaT (for datetime)
