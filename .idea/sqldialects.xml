@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Group_By.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Inserting_Data_into_Tables.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Joins.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Select_Queries.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Subqueries.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/data-handling-pipeline/Month 2/Week1/SQLite/Where_Filtering.py" dialect="GenericSQL" />
+  </component>
+</project>

@@ -2,7 +2,7 @@ import json
 import pandas as pd
 
 #q1
-with open("user.json" , "r") as f:
+with open("user.json", "r") as f:
     data = json.load(f)
 #print(data)
 
@@ -21,7 +21,7 @@ employee = {
     "department": "IT"
 }
 
-with open("employee.json" , "w") as f:
+with open("employee.json", "w") as f:
     json.dump(employee , f , indent=4 , sort_keys=True)
 
 #q4
@@ -41,10 +41,10 @@ except json.JSONDecodeError:
 
 #q6
 
-with open("config.json" , "r") as f:
+with open("config.json", "r") as f:
     d3 = json.load(f)
 d3["version"] = "1.0"
-with open("updated_config.json" , "w") as f:
+with open("updated_config.json", "w") as f:
     json.dump(d3 , f , indent=4)
 
 #q7
@@ -108,7 +108,7 @@ print(df4)
 
 #q12
 
-with open("api_response.json" , "r") as f:
+with open("api_response.json", "r") as f:
     data5 = json.load(f)
 
 df5 = pd.json_normalize(data5 , record_path=["data" , "users"])
@@ -270,7 +270,7 @@ print(df15_final)
 
 #  q22
 
-df16 = pd.read_json("data16.json"  , orient= "records")
+df16 = pd.read_json("data16.json", orient="records")
 print(df16)
 
 
@@ -283,7 +283,7 @@ df17 = pd.DataFrame({
 
 df17.to_json("people.json" , orient="records" , indent=4)
 
-df17 = pd.read_json("people.json" , orient = "records")
+df17 = pd.read_json("people.json", orient ="records")
 print(df17)
 
 
@@ -295,7 +295,7 @@ df18 = pd.DataFrame({
 })
 
 df18.to_json("df18.json" , orient="table")
-df18 = pd.read_json("df18.json" , orient="table")
+df18 = pd.read_json("df18.json", orient="table")
 print(df18)
 print(df18.dtypes)
 
@@ -306,7 +306,7 @@ df19 = pd.DataFrame({
 })
 
 df19.to_json("values.json" , orient="values")
-df19 = pd.read_json("values.json" , orient="values")
+df19 = pd.read_json("values.json", orient="values")
 print(df19)
 
 
