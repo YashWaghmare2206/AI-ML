@@ -138,7 +138,7 @@ d1 = {
     'Salary': [40000 , 50000 , None , 60000]
 }
 df = pd.DataFrame(d1)
-print(df[df.isna().any(axis=1)])
+print(df[df.isna().any(axis=1)])   # ALternate " all " for each value is true
 
 
 # Question 2
@@ -146,7 +146,7 @@ print(df[df.isna().any(axis=1)])
 import numpy as np
 
 df = pd.DataFrame({
-    "A":[1,2,np.nan],
+    "A":[1,2,np.nan],   # np.nan is float type  # and it means an numeric value is missing np.nan value is != np.nan whereas None == None
     "B":[None,5,6],
     "C":[7,8,9]
 })
@@ -359,7 +359,7 @@ df = pd.DataFrame({
     'C' : [5 , 6 ,7, 8],
     'D' : [7 , 8 , None , 10]
 })
-# Below is good code but not optimal so optimal is print(df.isnull().sum().idxmax())
+# Below is good code but not optimal so optimal is print(df.isnull().sum().idxmax()) # .idmax() Index of Maximum Value
 missing_count = df.isnull().sum()
 max_value = missing_count.max()
 print(missing_count[missing_count == max_value])

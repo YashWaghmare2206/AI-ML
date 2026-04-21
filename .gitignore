@@ -1,0 +1,17 @@
+# IDE files
+.idea/
+*.iml
+misc.xml
+modules.xml
+sqldialects.xml
+
+# Database files (auto-generated)
+*.db
+
+# Large/raw data files you don't need
+huge_data.csv
+cleaned_data.csv
+
+# OS files
+.DS_Store
+Thumbs.db

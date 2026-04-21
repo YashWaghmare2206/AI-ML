@@ -492,5 +492,499 @@ print(df.dropna(subset=['Salary']))
 
 
 
+                            # Section 1.3 — Fill Strategies
+
+# Topic 1.3.1 — df.fillna()
+
+
+# 1️⃣ Concept
+# df.fillna(value)
+#
+# Meaning:
+# Replace all missing values (NaN) with the given value
+#
+# 2️⃣ Our Base Dataset (same one)
+# df = pd.DataFrame({
+#     "Age":[25,None,30,28],
+#     "Salary":[40000,50000,None,60000],
+#     "Experience":[2,3,5,4]
+# })
+# Row	Age	Salary	Experience
+# 0	25	40000	2
+# 1	NaN	50000	3
+# 2	30	NaN	5
+# 3	28	60000	4
+# 3️⃣ Example 1 — Fill with 0
+#     df.fillna(0)
+#
+# Output:
+#
+# Age	Salary	Experience
+# 25	40000	2
+# 0	50000	3
+# 30	0	5
+# 28	60000	4
+#
+# Meaning:
+# All NaN → replaced by 0
+# 4️⃣ Example 2 — Fill with Specific Value
+# df.fillna("Missing")
+#
+# Possible for object/text columns.
+#
+# Example:
+# df["City"].fillna("Unknown")
+#
+# Used often for:
+# City
+# Gender
+# Category
+# Department
+
+# 5️⃣ Important Detail
+# ⚠ fillna() does NOT change original dataframe   # Important
+#
+# Example:
+# df.fillna(0)
+# print(df)
+#
+# Original remains same.
+#
+# To save permanently:
+#
+# df = df.fillna(0)
+# or
+# df.fillna(0, inplace=True)
+
+# 6️⃣ Real ML Insight
+#
+# Suppose:
+# Age missing
+#
+# Using:
+# df.fillna(0)
+# means
+# Age = 0 years old
+# This may be wrong logically.
+
+# 7️⃣ Very Useful Version
+#
+# Fill only specific column:
+# df["Age"] = df["Age"].fillna(0)
+# Better than filling whole dataframe.
+
+
+
+#q1
+# Fill all missing values with 0
+df.fillna(0)
+
+#q2
+#Fill only the Age column with 0
+df['Age'] = df['Age'].fillna(0)
+
+# q3
+clean_df = df.fillna(-1)
+
+#Q4
+# Missing values before: X
+# Missing values after fillna(0): Y
+
+print(df)
+print(df.fillna(0))
+
+
+#q5
+# Fill only Salary missing values with:
+df["Salary"] = df["Salary"].fillna(99999)
+print(df)
+
+# Q6
+
+df.fillna(100 , inplace=True)
+
+
+
+
+# Topic 1.3.2 — Mean vs Median Filling
+
+# 1️⃣ Mean Filling
+# Concept
+# df["column"].fillna(df["column"].mean())
+#
+# Meaning:
+# Replace missing values using the average value of that column
+
+# Our Base Dataset
+df = pd.DataFrame({
+    "Age":[25,None,30,28],
+    "Salary":[40000,50000,None,60000],
+    "Experience":[2,3,5,4]
+})
+# | Row | Age | Salary | Experience |
+# | --- | --- | ------ | ---------- |
+# | 0   | 25  | 40000  | 2          |
+# | 1   | NaN | 50000  | 3          |
+# | 2   | 30  | NaN    | 5          |
+# | 3   | 28  | 60000  | 4          |
+
+# 2️⃣ Example — Mean Fill for Age
+df["Age"] = df["Age"].fillna(df["Age"].mean()) # (25 + 30 + 28) / 3 = 27.67
+print(df)
+
+# 3️⃣ Median Filling
+# Concept
+# df["column"].fillna(df["column"].median())
+# Meaning:
+# Replace missing values using the middle value
+
+df["Age"] = df["Age"].fillna(df["Age"].median())
+
+# 4️⃣ Mean vs Median (Very Important)
+# | Method | Best Used When                    |
+# | ------ | --------------------------------- |
+# | Mean   | data is normal / no big outliers  |
+# | Median | data has outliers / skewed values |
+
+# 5️⃣ Example of Outlier Problem
+#
+# Suppose Salary values:
+# 40000, 50000, 60000, 5000000
+
+# Mean
+# Very large → unrealistic
+# because 50 lakh distorts average.
+#
+# Median
+# Middle value remains stable
+# Much safer.
+
+# 6️⃣ Real ML Rule
+# Numerical + no outliers → Mean
+# Numerical + outliers → Median
+# Categorical → Mode
+# This is a common interview question.
+
+
+
+
+# Topic 1.3.3 — Mode Filling + Forward Fill + Backward Fill
+
+# Part 1 — Mode Filling
+
+# 1️⃣ Concept
+# df["column"].fillna(df["column"].mode()[0])
+#
+# Meaning:
+# Replace missing values using the most frequently occurring value
+#
+# This is mainly used for:
+# Categorical columns
+# like:
+# Gender
+# City
+# Department
+# Category
+# Product Type
+
+# 2️⃣ Example
+# df = pd.DataFrame({
+#     "City":["Mumbai", "Pune", None, "Mumbai", "Delhi"]
+# })
+#
+# Values:
+# Mumbai, Pune, Mumbai, Delhi
+# Most frequent value:
+# Mumbai
+#
+# So:
+# df["City"] = df["City"].fillna(df["City"].mode()[0])
+# Missing value becomes:
+# Mumbai
+
+# 3️⃣ Why [0] ?
+#
+# Because:
+# df["City"].mode()
+# returns a Series, not a single value.
+#
+# Example:
+# 0    Mumbai
+# dtype: object
+# So we use:
+# .mode()[0]
+
+
+# Part 2 — Forward Fill (ffill)
+
+# 4️⃣ Concept
+# df.fillna(method="ffill")
+# or modern/common form:
+#
+# df.ffill()
+# Meaning:
+# Fill missing value using the value just before it
+
+df = pd.DataFrame({
+    "Sales":[100, None, None, 250]
+})
+
+#Original
+# | Sales |
+# | ----- |
+# | 100   |
+# | NaN   |
+# | NaN   |
+# | 250   |
+                # After ffill()
+# Output
+# | Sales |
+# | ----- |
+# | 100   |
+# | 100   |
+# | 100   |
+# | 250   |
+
+# 5️⃣ Use Case
+#
+# Very useful in:
+# Time series data
+# Stock prices
+# Sensor data
+# Daily reports
+
+
+# Part 3 — Backward Fill (bfill)
+
+# 6️⃣ Concept
+# df.fillna(method="bfill")
+# or
+# df.bfill()
+# Meaning:
+# Fill missing value using the next available value
+
+# 7️⃣ Difference Between ffill and bfill
+# Method	Uses
+# ffill()	previous value
+# bfill()	next value
+
+# 8️⃣ Real ML Rule
+# | Column Type             | Best Fill Method |
+# | ----------------------- | ---------------- |
+# | Numerical normal        | Mean             |
+# | Numerical with outliers | Median           |
+#     | Categorical             | Mode             |
+# | Sequential/Time Data    | ffill / bfill    |
+
+
+# Example for Solving
+
+# Q1
+# Fill missing values in Department using mode
+
+df['Department'] = df['Department'].fillna(df['Department'].mode()[0])
+
+# Q2
+# Use forward fill for the whole dataframe
+df = df.fillna(method='ffill')
+
+# Q3
+# Use backward fill for the whole dataframe and store result in:
+clean_df = df.fillna(method='bfill')
+
+# Q4
+# Print: Mode of Department: X
+print(df['Department'].mode()[0])
+
+# Q5
+# Fill only Salary using forward fill
+df['Salary'] = df['Salary'].fillna(method = 'ffill') # df["Salary"] = df["Salary"].ffill() Series suports ffill
+
+# 6 (Interview-style)
+# Which is better for:
+# Daily stock prices with missing dates
+# Mean, Median, Mode, or Forward Fill?
+# Ans : Forward Fill
+
+
+
+                    # Section 1.4 — Advanced Fill Techniques
+
+# Topic 1.4.1 — interpolate() 🔥 Interpolation
+
+# 1️⃣ Concept
+# df.interpolate()
+#
+# Meaning:
+#
+# Fill missing values by estimating values using surrounding data
+#
+# Usually used for:
+#
+# time series
+# stock prices
+# temperature
+# sales trends
+# sensor readings
+#
+# 2️⃣ Simple Example
+# df = pd.DataFrame({
+#     "Sales":[100, None, None, 160]
+# })
+# Original:
+# Row	Sales
+# 0	100
+# 1	NaN
+# 2	NaN
+# 3	160
+# 3️⃣ Normal fillna() vs Interpolation
+# If we use forward fill
+# df.ffill()
+#
+# Output:
+# Sales
+# 100
+# 100
+# 100
+# 160
+#
+# This ignores the trend.
+#
+# If we use interpolation
+# df.interpolate()
+
+# Output:
+# Sales
+# 100
+# 120
+# 140
+# 160
+#
+# Because pandas estimates:
+#
+# increase is gradual
+
+# 4️⃣ How It Thinks
+#
+# From:
+# 100 → 160
+#
+# Difference:
+# 60
+# There are:
+# 3 steps
+# So:
+# 60 / 3 = 20
+# Then:
+# 100
+# 120
+# 140
+# 160
+
+# 5️⃣ Syntax
+# df.interpolate(method="linear")
+# Default is usually:
+# linear interpolation
+# which means:
+# straight-line estimation
+
+# 6️⃣ Real ML Example
+# Suppose:
+# Temperature data
+# Day	Temp
+# Mon	30
+# Tue	NaN
+# Wed	NaN
+# Thu	36
+#
+# Mean fill gives:
+# 33
+# 33
+# But interpolation gives:
+# 32
+# 34
+# Much better.
+
+# 7️⃣ Important Limitation
+#
+# Interpolation works best for:
+# ✔ continuous numeric data
+#
+# Not good for:
+# ❌ names
+# ❌ gender
+# ❌ city
+# ❌ categories
+#
+# Because:
+# You cannot interpolate "Mumbai"
+# 8️⃣ Common Interview Question
+# Which is better?
+# mean fill vs interpolation
+#
+# Answer:
+# For time-based gradual data → interpolation is better
+
+
+# Section 1.4.2 — Group-Based Fill
+
+# 1️⃣ Why Normal Mean Can Be Wrong
+# Suppose dataset:
+#
+# Department	Salary
+# IT	50000
+# IT	NaN
+# HR	30000
+# HR	NaN
+#
+# If we do:
+# df["Salary"].fillna(df["Salary"].mean())
+#
+# Global mean:
+# (50000 + 30000) / 2 = 40000
+# Then both missing values become:
+# 40000
+# ⚠ Wrong because:
+# IT salaries and HR salaries are different
+
+# 2️⃣ Better Solution — Group Fill
+# We fill using:
+# IT average for IT rows
+#     HR average for HR rows
+
+df = pd.DataFrame({
+    "Department":["IT","IT","HR","HR"],
+    "Salary":[50000,None,30000,None]
+})
+
+# 3️⃣ Syntax
+df["Salary"] = df.groupby("Department")["Salary"].transform(lambda x: x.fillna(x.mean()))
+
+# df.groupby("Department")  # IT group  HR group
+# ["Salary"] Focus only on Salary column.
+#  transform(...) Apply operation and return same shape.This is important because:transform keeps row structurewhile: # agg()does not.
+# lambda x: x.fillna(x.mean())  for each group, fill NaN using that group's mean
+
+# 7️⃣ Real ML Use Cases
+# Very common for:
+#
+# Salary by Department
+# Marks by Class
+# Income by City
+# House price by Area
+# Spending by Customer Type
+#
+# This is production-level preprocessing.
+
+
+# 8️⃣ Interview Insight
+# Question:
+# Why use groupby fill instead of mean fill?
+#
+# Answer:
+# Because different groups have different distributions
+# Excellent interview point.
+#
+
 
 
