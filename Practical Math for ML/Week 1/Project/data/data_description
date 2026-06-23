@@ -1,0 +1,53 @@
+For the Titanic dataset, you can write the **Dataset Description** section like this:
+
+# Dataset Description – Titanic Dataset
+
+The Titanic dataset contains information about passengers who were aboard the RMS Titanic when it sank on April 15, 1912. The dataset is commonly used for data analysis, statistics, data cleaning, visualization, and machine learning tasks.
+
+The goal is to analyze passenger characteristics and understand factors that influenced survival.
+
+## Dataset Information
+
+* Total Rows: 891 passengers
+* Total Columns: 12 features
+* Target Variable: `Survived`
+
+  * 0 = Did Not Survive
+  * 1 = Survived
+
+## Column Description
+
+| Column      | Description                                                          |
+| ----------- | -------------------------------------------------------------------- |
+| PassengerId | Unique identifier for each passenger                                 |
+| Survived    | Survival status (0 = No, 1 = Yes)                                    |
+| Pclass      | Passenger class (1 = First, 2 = Second, 3 = Third)                   |
+| Name        | Passenger's full name                                                |
+| Sex         | Gender of passenger                                                  |
+| Age         | Age in years                                                         |
+| SibSp       | Number of siblings/spouses aboard                                    |
+| Parch       | Number of parents/children aboard                                    |
+| Ticket      | Ticket number                                                        |
+| Fare        | Ticket fare paid                                                     |
+| Cabin       | Cabin number                                                         |
+| Embarked    | Port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton) |
+
+## Data Types
+
+### Numerical Features
+
+* Age
+* Fare
+* SibSp
+* Parch
+* PassengerId
+* Survived
+* Pclass
+
+### Categorical Features
+
+* Sex
+* Embarked
+* Cabin
+* Ticket
+* Name
