@@ -1,0 +1,412 @@
+#%%
+import numpy as np
+import tensorflow as tf
+from keras import Sequential
+from keras.layers import Dense
+from keras.src.ops import sigmoid
+#%%
+x = np.array([[200.0 , 17.0]])
+layer_1 = Dense(units = 3 , activation = 'sigmoid')
+a1 = layer_1(x)
+
+layer_2 = Dense(units = 1 , activation = 'sigmoid')
+a2 = layer_2(a1)
+
+if a2 >= 0.5:
+    yhat = 1
+else:
+    yhat = 0
+
+print(yhat)
+print(a1)
+print(a2)
+#%%
+from keras import Sequential
+from keras.layers import Dense
+import numpy as np
+
+x = np.array([[200.0, 17.0],
+              [120.0, 5.0],
+              [425.0, 20.0],
+              [212.0, 18.0]])
+
+y = np.array([1, 0, 0, 1])
+
+layer_1 = Dense(units=3, activation='sigmoid')
+layer_2 = Dense(units=1, activation='sigmoid')
+
+model = Sequential([layer_1, layer_2])
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    loss='binary_crossentropy'
+)
+
+model.fit(x, y, epochs=100)
+
+model.fit(x, y, epochs=100)
+#%%
+model.summary()
+
+#%%
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+
+# =========================
+# 1. Load MNIST Dataset
+# =========================
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# =========================
+# 2. Normalize Pixel Values
+# =========================
+# Original pixel values: 0 to 255
+# Convert them to: 0 to 1
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# =========================
+# 3. Build Neural Network
+# =========================
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# =========================
+# 4. Compile Model
+# =========================
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# =========================
+# 5. Train Model
+# =========================
+model.fit(
+    x_train,
+    y_train,
+    epochs=10,
+    batch_size=32,
+    validation_split=0.1
+)
+
+# =========================
+# 6. Evaluate on Test Data
+# =========================
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+
+print("Test Loss:", test_loss)
+print("Test Accuracy:", test_accuracy)
+
+# =========================
+# 7. Make Prediction
+# =========================
+predictions = model.predict(x_test)
+
+# Get class with highest probability
+digit = np.argmax(predictions[0])
+
+print("Predicted:", digit)
+print("Actual:", y_test[0])
+
+# =========================
+# 8. Display Image
+# =========================
+plt.imshow(x_test[0], cmap='gray')
+plt.title(f"Predicted: {digit}, Actual: {y_test[0]}")
+plt.axis('off')
+plt.show()
+#%%
+import tkinter as tk
+import numpy as np
+import tensorflow as tf
+from PIL import ImageGrab
+import matplotlib.pyplot as plt
+
+# ============================================================
+# 1. Load MNIST Dataset
+# ============================================================
+
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+
+# ============================================================
+# 2. Build Neural Network
+# ============================================================
+
+model = tf.keras.Sequential([
+    tf.keras.Input(shape=(28, 28)),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+
+# ============================================================
+# 3. Compile
+# ============================================================
+
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+
+# ============================================================
+# 4. Train
+# ============================================================
+
+model.fit(
+    x_train,
+    y_train,
+    epochs=10,
+    batch_size=32,
+    validation_split=0.1
+)
+
+
+# ============================================================
+# 5. Test Accuracy
+# ============================================================
+
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+
+print("Test Accuracy:", test_accuracy)
+
+
+# ============================================================
+# 6. Drawing Canvas
+# ============================================================
+
+WINDOW_SIZE = 400
+
+root = tk.Tk()
+root.title("MNIST Digit Recognizer")
+
+canvas = tk.Canvas(
+    root,
+    width=WINDOW_SIZE,
+    height=WINDOW_SIZE,
+    bg="black"
+)
+
+canvas.pack()
+
+
+# ============================================================
+# 7. Draw Digit
+# ============================================================
+
+def draw(event):
+
+    x = event.x
+    y = event.y
+
+    # Draw white line on black background
+    canvas.create_oval(
+        x - 10,
+        y - 10,
+        x + 10,
+        y + 10,
+        fill="white",
+        outline="white"
+    )
+
+
+canvas.bind("<B1-Motion>", draw)
+
+
+# ============================================================
+# 8. Clear Canvas
+# ============================================================
+
+def clear_canvas():
+
+    canvas.delete("all")
+
+
+# ============================================================
+# 9. Predict Digit
+# ============================================================
+
+def predict_digit():
+
+    # Get canvas position on screen
+    x = root.winfo_rootx()
+    y = root.winfo_rooty()
+
+    # Canvas is below the title bar
+    canvas_x = canvas.winfo_rootx()
+    canvas_y = canvas.winfo_rooty()
+
+    # Take screenshot of canvas
+    image = ImageGrab.grab(
+        bbox=(
+            canvas_x,
+            canvas_y,
+            canvas_x + WINDOW_SIZE,
+            canvas_y + WINDOW_SIZE
+        )
+    )
+
+    # Convert to grayscale
+    image = image.convert("L")
+
+    # Resize to MNIST 28x28
+    image = image.resize((28, 28))
+
+    # Convert to NumPy
+    image = np.array(image)
+
+    # Normalize
+    image = image / 255.0
+
+    # Add batch dimension
+    image = np.expand_dims(image, axis=0)
+
+    # ========================================================
+    # Prediction
+    # ========================================================
+
+    predictions = model.predict(image, verbose=0)
+
+    digit = np.argmax(predictions[0])
+
+    confidence = predictions[0][digit] * 100
+
+    result_label.config(
+        text=f"Predicted: {digit}\nConfidence: {confidence:.2f}%"
+    )
+
+    # ========================================================
+    # Show processed image
+    # ========================================================
+
+    plt.imshow(image[0], cmap="gray")
+    plt.title(f"Predicted: {digit}")
+    plt.axis("off")
+    plt.show()
+
+
+# ============================================================
+# 10. Buttons
+# ============================================================
+
+button_frame = tk.Frame(root)
+
+button_frame.pack(pady=10)
+
+
+predict_button = tk.Button(
+    button_frame,
+    text="Predict",
+    command=predict_digit,
+    width=15,
+    height=2
+)
+
+predict_button.pack(side="left", padx=10)
+
+
+clear_button = tk.Button(
+    button_frame,
+    text="Clear",
+    command=clear_canvas,
+    width=15,
+    height=2
+)
+
+clear_button.pack(side="left", padx=10)
+
+
+# ============================================================
+# 11. Result Label
+# ============================================================
+
+result_label = tk.Label(
+    root,
+    text="Draw a digit!",
+    font=("Arial", 20)
+)
+
+result_label.pack(pady=10)
+
+
+# ============================================================
+# 12. Start Application
+# ============================================================
+
+root.mainloop()
+#%%
+import numpy as np
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Input
+x = np.array([200, 17])
+
+
+# Layer 1 → 3 neurons
+
+# Neuron 1
+w1_1 = np.array([1, 2])
+b1_1 = np.array([-1])
+
+z1_1 = np.dot(w1_1, x) + b1_1
+a1_1 = sigmoid(z1_1)
+
+
+# Neuron 2
+w1_2 = np.array([2, 1])
+b1_2 = np.array([-2])
+
+z1_2 = np.dot(w1_2, x) + b1_2
+a1_2 = sigmoid(z1_2)
+
+
+# Neuron 3
+w1_3 = np.array([1, -1])
+b1_3 = np.array([3])
+
+z1_3 = np.dot(w1_3, x) + b1_3
+a1_3 = sigmoid(z1_3)
+
+
+# Output of Layer 1
+a1 = np.array([a1_1, a1_2, a1_3])
+
+
+# Layer 2 → 2 neurons
+
+# Neuron 1
+w2_1 = np.array([1, 2, 3])
+b2_1 = np.array([-1])
+
+z2_1 = np.dot(w2_1, a1) + b2_1
+a2_1 = sigmoid(z2_1)
+
+
+# Neuron 2
+w2_2 = np.array([2, -1, 1])
+b2_2 = np.array([2])
+
+z2_2 = np.dot(w2_2, a1) + b2_2
+a2_2 = sigmoid(z2_2)
+
+
+# Output of Layer 2
+a2 = np.array([a2_1, a2_2])
+
+print("Layer 1 output:", a1)
+print("Layer 2 output:", a2)
+#%%

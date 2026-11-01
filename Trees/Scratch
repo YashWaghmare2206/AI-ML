@@ -1,0 +1,320 @@
+#%%
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#%%
+class Node:
+
+    def __init__(self,
+                 feature_index,
+                 threshold,
+                 left_child,
+                 right_child,
+                 leaf_weight,
+                 is_leaf):
+
+        self.feature_index = feature_index
+        self.threshold = threshold
+        self.left_child = left_child
+        self.right_child = right_child
+        self.leaf_weight = leaf_weight
+        self.is_leaf = is_leaf
+#%%
+class XGBoostRegressor:
+
+    def __init__(
+            self,
+            n_estimators=100,
+            learning_rate=0.1,
+            max_depth=3,
+            min_child_weight=1,
+            gamma=0,
+            reg_lambda=1
+    ):
+
+        self.n_estimators = n_estimators
+        self.learning_rate = learning_rate
+        self.max_depth = max_depth
+        self.min_child_weight = min_child_weight
+        self.gamma = gamma
+        self.reg_lambda = reg_lambda
+
+        self.trees = []
+        self.base_prediction = None
+
+    def loss_function(self, y, y_pred):
+        loss = np.sum(0.5 * (y - y_pred)**2)
+        return loss
+
+    def gradient(self , y ,y_pred):
+        return y_pred - y
+
+    def hessian(self , y):
+        return np.full(len(y) , 1)
+
+    def calculate_G_H(self, indices, gradients, hessians):
+        G = np.sum(gradients[indices])
+        H = np.sum(hessians[indices])
+
+        return G, H
+
+    def calculate_leaf_weight(self, G, H):
+        return -G / (H + self.reg_lambda)
+
+    def calculate_gain(self, G_parent, H_parent, G_left, H_left, G_right, H_right):
+
+        parent = (G_parent ** 2) / (H_parent + self.reg_lambda)
+        left = (G_left ** 2) / (H_left + self.reg_lambda)
+        right = (G_right ** 2) / (H_right + self.reg_lambda)
+
+        return 0.5 * (left + right - parent) - self.gamma
+
+    def find_best_split(self, X, gradients, hessians, indices):
+
+        best_gain = -np.inf
+        best_feature = None
+        best_threshold = None
+
+        for feature in range(X.shape[1]):
+
+            values = X[indices, feature]
+            thresholds = np.unique(values)
+
+            for threshold in thresholds:
+
+                left_indices = indices[values <= threshold]
+                right_indices = indices[values > threshold]
+
+                if len(left_indices) == 0 or len(right_indices) == 0:
+                    continue
+
+                G_left, H_left = self.calculate_G_H(
+                    left_indices, gradients, hessians
+                )
+
+                G_right, H_right = self.calculate_G_H(
+                    right_indices, gradients, hessians
+                )
+
+                G_parent = G_left + G_right
+                H_parent = H_left + H_right
+
+                gain = self.calculate_gain(
+                    G_parent, H_parent,
+                    G_left, H_left,
+                    G_right, H_right
+                )
+
+                if gain > best_gain:
+                    best_gain = gain
+                    best_feature = feature
+                    best_threshold = threshold
+
+        return best_feature, best_threshold, best_gain
+
+
+    def build_tree(self, X, gradients, hessians, indices, depth):
+
+        # Calculate G and H for current node
+        G, H = self.calculate_G_H(indices, gradients, hessians)
+
+        # Stopping condition
+        if depth >= self.max_depth:
+
+            leaf_weight = self.calculate_leaf_weight(G, H)
+
+            return Node(
+                feature_index=None,
+                threshold=None,
+                left_child=None,
+                right_child=None,
+                leaf_weight=leaf_weight,
+                is_leaf=True
+            )
+
+        # Find best split
+        best_feature, best_threshold, best_gain = self.find_best_split(
+            X, gradients, hessians, indices
+        )
+
+        # If no valid split is found
+        if best_feature is None:
+
+            leaf_weight = self.calculate_leaf_weight(G, H)
+
+            return Node(
+                feature_index=None,
+                threshold=None,
+                left_child=None,
+                right_child=None,
+                leaf_weight=leaf_weight,
+                is_leaf=True
+            )
+
+        # Get feature values for current node
+        values = X[indices, best_feature]
+
+        # Split indices
+        left_indices = indices[values <= best_threshold]
+        right_indices = indices[values > best_threshold]
+
+        # Recursively build left subtree
+        left_child = self.build_tree(
+            X,
+            gradients,
+            hessians,
+            left_indices,
+            depth + 1
+        )
+
+        # Recursively build right subtree
+        right_child = self.build_tree(
+            X,
+            gradients,
+            hessians,
+            right_indices,
+            depth + 1
+        )
+
+        # Create internal node
+        return Node(
+            feature_index=best_feature,
+            threshold=best_threshold,
+            left_child=left_child,
+            right_child=right_child,
+            leaf_weight=None,
+            is_leaf=False
+        )
+
+
+    def predict_tree(self, node, X):
+
+        predictions = []
+
+        for i in range(X.shape[0]):
+
+            current_node = node
+
+            # Traverse until we reach a leaf
+            while not current_node.is_leaf:
+
+                feature = current_node.feature_index
+                threshold = current_node.threshold
+
+                if X[i, feature] <= threshold:
+                    current_node = current_node.left_child
+                else:
+                    current_node = current_node.right_child
+
+            # Leaf reached
+            predictions.append(current_node.leaf_weight)
+
+        return np.array(predictions)
+
+
+    def update_predictions(self, y_pred, tree_pred):
+
+        y_pred = y_pred + self.learning_rate * tree_pred
+        return y_pred
+
+    def fit(self, X, y):
+
+        # Initial prediction = mean of target values
+        self.base_prediction = np.mean(y)
+
+        # Current predictions
+        y_pred = np.full(len(y), self.base_prediction)
+
+        # Indices of all training samples
+        indices = np.arange(len(y))
+
+        # Boosting rounds
+        for _ in range(self.n_estimators):
+
+            # Calculate gradients and hessians
+            gradients = self.gradient(y, y_pred)
+            hessians = self.hessian(y)
+
+            # Build one tree
+            tree = self.build_tree(
+                X,
+                gradients,
+                hessians,
+                indices,
+                depth=0
+            )
+
+            # Prediction from current tree
+            tree_pred = self.predict_tree(tree, X)
+
+            # Update overall prediction
+            y_pred = self.update_predictions(
+                y_pred,
+                tree_pred
+            )
+
+            # Store the tree
+            self.trees.append(tree)
+
+        return self
+
+    def predict(self, X):
+
+        # Start with base prediction
+        y_pred = np.full(X.shape[0], self.base_prediction)
+
+        # Add contribution from every tree
+        for tree in self.trees:
+
+            tree_pred = self.predict_tree(tree, X)
+
+            y_pred = y_pred + self.learning_rate * tree_pred
+
+        return y_pred
+#%%
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Load built-in regression dataset
+data = fetch_california_housing()
+
+X = data.data
+y = data.target
+
+print("X shape:", X.shape)
+print("y shape:", y.shape)
+print("Features:", data.feature_names)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
+
+model = XGBoostRegressor(
+    n_estimators=50,
+    learning_rate=0.1,
+    max_depth=3,
+    min_child_weight=1,
+    gamma=0,
+    reg_lambda=1
+)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print("MAE :", mae)
+print("MSE :", mse)
+print("RMSE:", rmse)
+print("R²  :", r2)
